@@ -1,7 +1,11 @@
+import dotenv from "dotenv";
+dotenv.config();
 import morgan from "morgan";
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+
+import AdminRouter from "./src/router/AdminRouter.js";
+import { connectDB } from "./src/config/DbConfig.js";
 
 const app = express();
 
@@ -13,7 +17,11 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
+//db connect
+connectDB();
+
 // router
+app.use("/api/v1/admin", AdminRouter);
 
 app.use("/", (req, res, next) => {
   res.json({
@@ -22,7 +30,16 @@ app.use("/", (req, res, next) => {
   });
 });
 
-//error handler
+//global error handler
+app.use((error, req, res, next) => {
+  console.log(error);
+  const errorCode = error.errorCode || 404;
+
+  res.status(errorCode).json({
+    status: "error",
+    message: error.message,
+  });
+});
 
 app.listen(PORT, (error) => {
   error
