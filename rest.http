@@ -6,8 +6,8 @@ Content-Type: application/json
 {
     "fName":"Narayan",
     "lName":"Aryal",
-    "email":"email@.com",
+    "email":"aa@.com",
     "phone":"021457",
-    "address":"sydhety",
+    "address":"sydney",
     "password":"125445871qwe"
 }
