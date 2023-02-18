@@ -25,8 +25,8 @@ app.use("/api/v1/admin", AdminRouter);
 
 app.use("/", (req, res, next) => {
   res.json({
-    status: "success",
-    message: "success",
+    
+    message: "you do not have access here",
   });
 });
 

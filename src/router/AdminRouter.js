@@ -39,6 +39,11 @@ router.post("/", async (req, res, next) => {
         });
   } catch (error) {
     error.errorCode = 500;
+    if (error.message.includes("E11000 duplicate key error collection")) {
+      error.errorCode = 200;
+      error.message =
+        "There is already an account exist associated with this email.";
+    }
     next(error);
   }
 });
