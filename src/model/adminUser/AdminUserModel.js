@@ -10,3 +10,10 @@ export const createUser = (userObj) => {
 export const findAdmin = (filter) => {
     return AdminUserSchema.findOne(filter)
 }
+
+//find by filter and update
+export const findAdminAndUpdate = (filter, obj) => {
+    return AdminUserSchema.findOneAndUpdate(filter, obj, {new: true})
+}
+
+

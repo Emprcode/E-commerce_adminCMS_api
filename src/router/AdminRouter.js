@@ -1,5 +1,5 @@
 import express from "express";
-import { createUser } from "../model/adminUser/AdminUserModel.js";
+import { createUser, findAdminAndUpdate } from "../model/adminUser/AdminUserModel.js";
 import { v4 as uuidv4 } from 'uuid';
 import { hashPassword } from "../utils/bcrypt.js";
 import { adminSignUPEmailVerification } from "../utils/emails.js";
@@ -21,7 +21,7 @@ router.post("/", async (req, res, next) => {
    if (result?._id) {
     //we need to create a unique url and send email to the client
     //process for the email
-    const uniqueUrl = `http://localhost:8000/verify?c=${result.verificationCode}&email=${result.email}`;
+    const uniqueUrl = `http://localhost:3000/verify?c=${result.verificationCode}&email=${result.email}`;
 
     //call email service
 
@@ -47,6 +47,37 @@ router.post("/", async (req, res, next) => {
     next(error);
   }
 });
+
+// email verification
+
+router.post ("/email-verify", async(req, res, next)=> {
+  try {
+    console.log(req.body)
+    const obj ={
+      status: "active",
+      verificationCode: "",
+      isEmailVerified: true
+    }
+const result = await findAdminAndUpdate(req.body, obj)
+
+if(result?._id) { res.json({
+      status:"success",
+      message:"Your email is verified, You can login now!"
+    }) 
+  return}
+    
+    
+    res.json({
+      status:"error",
+      message:"Invalid link"
+    })
+  } catch (error) {
+    next(error)
+    
+  }
+})
+
+
 
 //admin login
 
