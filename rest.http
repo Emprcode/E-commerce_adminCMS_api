@@ -11,3 +11,13 @@ Content-Type: application/json
     "address":"sydney",
     "password":"125445871qwe"
 }
+
+### login admin
+POST http://localhost:8000/api/v1/admin/login
+Content-Type: application/json 
+
+{
+    
+    "email":"narayanaryal.code@gmail.com",
+    "password":"1234"
+}
