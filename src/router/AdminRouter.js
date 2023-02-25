@@ -16,6 +16,7 @@ import { createSession, deleteSession } from "../model/session/SessionModel.js";
 import {
   adminRegistrationValidation,
   emailVerificationValidation,
+  loginValidation,
 } from "../middleware/joiMiddleware.js";
 
 const router = express.Router();
@@ -96,7 +97,7 @@ router.post(
 
 //admin login
 
-router.post("/login", async (req, res, next) => {
+router.post("/login", loginValidation, async (req, res, next) => {
   try {
     const { email, password } = req.body;
     // check if email exist

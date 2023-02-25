@@ -1,5 +1,9 @@
 import Joi from "joi";
 
+const EMAIL = Joi.string().email({ minDomainSegments: 2 }).required();
+const SHORT_STR = Joi.string().max(100);
+const LONG_STR = Joi.string().max(500);
+
 export const validationProcessor = (req, res, next, schema) => {
   try {
     const { error } = schema.validate(req.body);
@@ -14,23 +18,35 @@ export const validationProcessor = (req, res, next, schema) => {
     next(error);
   }
 };
+
+//ADMIN REGISTER VALIDATION
 export const adminRegistrationValidation = (req, res, next) => {
   const schema = Joi.object({
-    fName: Joi.string().required(),
-    lName: Joi.string().required(),
-    address: Joi.string().allow("", null),
-    phone: Joi.string().allow("", null),
-    email: Joi.string().email({ minDomainSegments: 2 }).required(),
-    password: Joi.string().min(6).required(),
+    fName: SHORT_STR.required(),
+    lName: SHORT_STR.required(),
+    address: SHORT_STR.allow("", null),
+    phone: SHORT_STR.allow("", null),
+    email: EMAIL,
+    password: SHORT_STR.min(6).required(),
   });
 
   return validationProcessor(req, res, next, next);
 };
+
+//EMAIL VERIFICATION VALIDATION
 export const emailVerificationValidation = (req, res, next) => {
   const schema = Joi.object({
-    verificationCode: Joi.string().required(),
-
-    email: Joi.string().email({ minDomainSegments: 2 }).required(),
+    verificationCode: SHORT_STR.required(),
+    email: EMAIL,
   });
-  return validationProcessor(req, res, next, next);
+  return validationProcessor(req, res, next, schema);
+};
+
+//LOGIN VALIDATION
+export const loginValidation = (req, res, next) => {
+  const schema = Joi.object({
+    password: SHORT_STR.required(),
+    email: EMAIL,
+  });
+  return validationProcessor(req, res, next, schema);
 };
