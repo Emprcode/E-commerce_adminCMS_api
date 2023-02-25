@@ -1,50 +1,48 @@
 import express from "express";
 import {
-  createUser,
+  createAdmin,
   findAdmin,
   findAdminAndUpdate,
-} from "../model/adminUser/AdminUserModel.js";
+} from "../models/adminUser/AdminUserModel.js";
+import { createSession } from "../models/session/SessionModel.js";
+const router = express.Router();
 import { v4 as uuidv4 } from "uuid";
 import { comparePassword, hashPassword } from "../utils/bcrypt.js";
 import {
   adminSignUpEmailVerification,
   otpNotification,
-  resetPasswordNotification,
 } from "../utils/emails.js";
 import { otpGenerator } from "../utils/randomGenerator.js";
-import { createSession, deleteSession } from "../model/session/SessionModel.js";
 
-const router = express.Router();
-
-//admin registration
-
+// admin resitration
 router.post("/", async (req, res, next) => {
   try {
-    // console.log(req.body);
+    console.log(req.body);
+
     req.body.password = hashPassword(req.body.password);
+
     req.body.verificationCode = uuidv4();
-    const result = await createUser(req.body);
-    // console.log(result)
+    const result = await createAdmin(req.body);
 
     if (result?._id) {
-      //we need to create a unique url and send email to the client
+      // we need to crate unique url and sent email to the client
       //process for the email
       const uniqueUrl = `http://localhost:3000/verify?c=${result.verificationCode}&email=${result.email}`;
 
       //call email service
-
       adminSignUpEmailVerification(result, uniqueUrl);
 
       res.json({
         status: "success",
         message:
-          "We have sent an email verification linkto your email. Please check your email and follow your instruction to activate your account",
+          "We have sent an email verification link to your email. Please chek your meail (junk as well if not found in inbox) and follow the instructiosn to activate your account.",
       });
+
       return;
     }
     res.json({
       status: "error",
-      message: "unable to create new admin, please try again later",
+      message: "Error, Unable to create new admin, Try again latere",
     });
   } catch (error) {
     error.errorCode = 500;
@@ -58,8 +56,7 @@ router.post("/", async (req, res, next) => {
 });
 
 // email verification
-
-router.post("/email-verify", async (req, res, next) => {
+router.post("/verify-email", async (req, res, next) => {
   try {
     console.log(req.body);
     const obj = {
@@ -72,8 +69,11 @@ router.post("/email-verify", async (req, res, next) => {
     if (result?._id) {
       res.json({
         status: "success",
-        message: "Your email is verified, You can login now!",
+        message: "Your account has been verified, You may login now",
       });
+
+      //send email confirmation as well
+
       return;
     }
 
@@ -86,60 +86,56 @@ router.post("/email-verify", async (req, res, next) => {
   }
 });
 
-//admin login
-
+// login user
 router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    // check if email exist
-    const result = await findAdmin({ email });
+    //does user exist for given email
+    const admin = await findAdmin({ email });
 
-    if (result?.status === "inactive") {
+    if (admin?.status === "inactive") {
       return res.json({
         status: "error",
-        message: "User inactive, check your email and verify your account",
+        message:
+          "Your account is inactive, check your email and activate your account.",
       });
     }
 
-    //is password match
-
-    if (result?._id) {
-      const isPasswordMatch = comparePassword(password, result.password);
+    if (admin?._id) {
+      const isPasswordMatch = comparePassword(password, admin.password);
 
       if (isPasswordMatch) {
-        result.password = undefined;
-        result.__v = undefined;
+        admin.password = undefined;
+        admin.__v = undefined;
 
         return res.json({
           status: "success",
-          message: "Login Successful",
-          result,
+          message: "Login successfull",
+          admin,
         });
       }
     }
 
     res.json({
       status: "error",
-      message: "Invalid logging details",
+      message: "Invalid loging details",
     });
   } catch (error) {
     next(error);
   }
 });
-export default router;
 
-//otp request
+//otp requst
 
 router.post("/request-otp", async (req, res, next) => {
   try {
     const { email } = req.body;
 
     if (email && typeof email === "string") {
-      //does email exist
+      //does email exit for user
       const user = await findAdmin({ email });
-
       if (user?._id) {
-        // create otp and store in new table
+        //create otp and store in new table, sessions
         const optLength = 6;
         const token = otpGenerator(optLength);
 
@@ -150,61 +146,20 @@ router.post("/request-otp", async (req, res, next) => {
 
         const result = await createSession(obj);
 
-        //send that otp in email
         if (result?._id) {
+          //send that opt to the client's email
           otpNotification({ fName: user.fName, email, token });
         }
       }
     }
+
     res.json({
       status: "success",
-      message: "You will receive OTP in given email address",
+      message:
+        "If your email is found in our system, you will receive OTP. Please check junk folder as well.",
     });
   } catch (error) {
     next(error);
   }
 });
-
-//otp
-router.patch("/reset-password", async (req, res, next) => {
-  try {
-    const { email, password, otp } = req.body;
-//check if email and otp exist in db
-//delete the record
-
-const filter = {token: otp,  associate: email}
-const result = await deleteSession(filter)
-// console.log(result)
-
-if(result?._id){
-    //encrypt the password
-  //updateuser table with password by email
-  const hashedPass = hashPassword(password)
-  const user = await findAdminAndUpdate({email}, {password:hashedPass})
-  
-  console.log(user)
-  
-  if(user?._id){
-    //send email notification
-    resetPasswordNotification(user)
-    return({
-      status:"success",
-      message:"your password has been updated"
-    })
-    
-}
-
-
-}
-
-   
-    res.json({
-      status: "error",
-      message: "Error",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
-
+export default router;

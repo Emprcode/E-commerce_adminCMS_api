@@ -5,7 +5,7 @@ import express from "express";
 import cors from "cors";
 
 import AdminRouter from "./src/router/AdminRouter.js";
-import { connectDB } from "./src/config/DbConfig.js";
+import { connectDb } from "./src/config/DbConfig.js";
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(cors());
 app.use(morgan("dev"));
 
 //db connect
-connectDB();
+connectDb();
 
 // router
 app.use("/api/v1/admin", AdminRouter);

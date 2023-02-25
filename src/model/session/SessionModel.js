@@ -4,7 +4,7 @@ import SessionSchema from "./SessionSchema.js"
 export const createSession = (obj) => {
     return SessionSchema(obj).save()
 }
-//delete token
+//delete token {token: otp & associate: email}
 export const deleteSession = (filter) => {
     return SessionSchema.findOneAndDelete(filter)
 }
