@@ -92,9 +92,9 @@ router.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     // check if email exist
-    const result = await findAdmin({ email });
+    const admin = await findAdmin({ email });
 
-    if (result?.status === "inactive") {
+    if (admin?.status === "inactive") {
       return res.json({
         status: "error",
         message: "User inactive, check your email and verify your account",
@@ -103,17 +103,17 @@ router.post("/login", async (req, res, next) => {
 
     //is password match
 
-    if (result?._id) {
-      const isPasswordMatch = comparePassword(password, result.password);
+    if (admin?._id) {
+      const isPasswordMatch = comparePassword(password, admin.password);
 
       if (isPasswordMatch) {
-        result.password = undefined;
-        result.__v = undefined;
+        admin.password = undefined;
+        admin.__v = undefined;
 
         return res.json({
           status: "success",
           message: "Login Successful",
-          result,
+          admin,
         });
       }
     }
