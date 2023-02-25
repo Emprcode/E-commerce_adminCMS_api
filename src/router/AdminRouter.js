@@ -13,12 +13,16 @@ import {
 } from "../utils/emails.js";
 import { otpGenerator } from "../utils/randomGenerator.js";
 import { createSession, deleteSession } from "../model/session/SessionModel.js";
+import {
+  adminRegistrationValidation,
+  emailVerificationValidation,
+} from "../middleware/joiMiddleware.js";
 
 const router = express.Router();
 
 //admin registration
 
-router.post("/", async (req, res, next) => {
+router.post("/", adminRegistrationValidation, async (req, res, next) => {
   try {
     // console.log(req.body);
     req.body.password = hashPassword(req.body.password);
@@ -59,32 +63,36 @@ router.post("/", async (req, res, next) => {
 
 // email verification
 
-router.post("/email-verify", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const obj = {
-      status: "active",
-      verificationCode: "",
-      isEmailVerified: true,
-    };
-    const result = await findAdminAndUpdate(req.body, obj);
+router.post(
+  "/email-verify",
+  emailVerificationValidation,
+  async (req, res, next) => {
+    try {
+      console.log(req.body);
+      const obj = {
+        status: "active",
+        verificationCode: "",
+        isEmailVerified: true,
+      };
+      const result = await findAdminAndUpdate(req.body, obj);
 
-    if (result?._id) {
+      if (result?._id) {
+        res.json({
+          status: "success",
+          message: "Your email is verified, You can login now!",
+        });
+        return;
+      }
+
       res.json({
-        status: "success",
-        message: "Your email is verified, You can login now!",
+        status: "error",
+        message: "Invalid link",
       });
-      return;
+    } catch (error) {
+      next(error);
     }
-
-    res.json({
-      status: "error",
-      message: "Invalid link",
-    });
-  } catch (error) {
-    next(error);
   }
-});
+);
 
 //admin login
 
@@ -169,35 +177,34 @@ router.post("/request-otp", async (req, res, next) => {
 router.patch("/reset-password", async (req, res, next) => {
   try {
     const { email, password, otp } = req.body;
-//check if email and otp exist in db
-//delete the record
+    //check if email and otp exist in db
+    //delete the record
 
-const filter = {token: otp,  associate: email}
-const result = await deleteSession(filter)
-// console.log(result)
+    const filter = { token: otp, associate: email };
+    const result = await deleteSession(filter);
+    // console.log(result)
 
-if(result?._id){
-    //encrypt the password
-  //updateuser table with password by email
-  const hashedPass = hashPassword(password)
-  const user = await findAdminAndUpdate({email}, {password:hashedPass})
-  
-  console.log(user)
-  
-  if(user?._id){
-    //send email notification
-    resetPasswordNotification(user)
-    return({
-      status:"success",
-      message:"your password has been updated"
-    })
-    
-}
+    if (result?._id) {
+      //encrypt the password
+      //updateuser table with password by email
+      const hashedPass = hashPassword(password);
+      const user = await findAdminAndUpdate(
+        { email },
+        { password: hashedPass }
+      );
 
+      console.log(user);
 
-}
+      if (user?._id) {
+        //send email notification
+        resetPasswordNotification(user);
+        return {
+          status: "success",
+          message: "your password has been updated",
+        };
+      }
+    }
 
-   
     res.json({
       status: "error",
       message: "Error",
@@ -206,5 +213,3 @@ if(result?._id){
     next(error);
   }
 });
-
-
