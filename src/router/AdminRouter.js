@@ -6,7 +6,12 @@ import {
 } from "../model/adminUser/AdminUserModel.js";
 import { v4 as uuidv4 } from "uuid";
 import { comparePassword, hashPassword } from "../utils/bcrypt.js";
-import { adminSignUPEmailVerification } from "../utils/emails.js";
+import {
+  adminSignUPEmailVerification,
+  otpNotification,
+} from "../utils/emails.js";
+import { otpGenerator } from "../utils/randomGenerator.js";
+import { createSession } from "../model/session/SessionModel.js";
 
 const router = express.Router();
 
@@ -121,3 +126,40 @@ router.post("/login", async (req, res, next) => {
   }
 });
 export default router;
+
+//otp request
+
+router.post("/request-otp", async (req, res, next) => {
+  try {
+    const { email } = req.body;
+
+    if (email && typeof email === "string") {
+      //does email exist
+      const user = await findAdmin({ email });
+
+      if (user?._id) {
+        // create otp and store in new table
+        const optLength = 6;
+        const token = otpGenerator(optLength);
+
+        const obj = {
+          token,
+          associate: email,
+        };
+
+        const result = await createSession(obj);
+
+        //send that otp in email
+        if (result?._id) {
+          otpNotification({ fName: user.fName, email, token });
+        }
+      }
+    }
+    res.json({
+      status: "success",
+      message: "You will receive OTP in given email address",
+    });
+  } catch (error) {
+    next(error);
+  }
+});

@@ -32,8 +32,8 @@ const emailProcessing = async (emailInfo) => {
 export const adminSignUPEmailVerification = ({ email, fName }, url) => {
   // send mail with defined transport object
   let info = {
-    from: `"Register Form" <${email}>`, // sender address
-    to: process.env.SMTP_USER, // list of receivers
+    from: `"Register Form" <${process.env.SMTP_USER}>`, // sender address
+    to: email, // list of receivers
     subject: "New account verification, Action Required", // Subject line
     text: `Hi ${fName}, Please follow the link ${url} to verify your account`, // plain text body
     html: `
@@ -60,3 +60,38 @@ export const adminSignUPEmailVerification = ({ email, fName }, url) => {
 
   emailProcessing(info);
 };
+
+//otp templeing
+export const otpNotification = ({ token, email, fName }, url) => {
+  // send mail with defined transport object
+  let info = {
+    from: `"Coding Shop" <${process.env.SMTP_USER}>`, // sender address
+    to: email, // list of receivers
+    subject: "New account verification, Action Required", // Subject line
+    text: `Hi ${fName}, Please follow the link ${url} to verify your account`, // plain text body
+    html: `
+        <p> Hi ${fName}</p>
+        </br>
+        </br>
+        Here is your token
+        </br>
+        </br>
+      ${token}
+        </br>
+        </br>
+        <p>
+        -------------
+        
+        </br>
+        </br>
+        customer care
+       
+        </p>
+        
+        `, // html body
+  };
+
+  emailProcessing(info);
+};
+
+
