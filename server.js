@@ -5,6 +5,7 @@ import express from "express";
 import cors from "cors";
 
 import AdminRouter from "./src/router/AdminRouter.js";
+import CategoryRouter from "./src/router/CategoryRouter.js";
 import { connectDb } from "./src/config/DbConfig.js";
 
 const app = express();
@@ -22,6 +23,7 @@ connectDb();
 
 // router
 app.use("/api/v1/admin", AdminRouter);
+app.use("/api/v1/admin", CategoryRouter);
 
 app.use("/", (req, res, next) => {
   res.json({

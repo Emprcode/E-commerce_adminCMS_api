@@ -30,7 +30,7 @@ export const adminRegistrationValidation = (req, res, next) => {
     password: SHORT_STR.min(6).required(),
   });
 
-  return validationProcessor(req, res, next, next);
+  return validationProcessor(req, res, next, schema);
 };
 
 //EMAIL VERIFICATION VALIDATION
