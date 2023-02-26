@@ -23,7 +23,7 @@ connectDb();
 
 // router
 app.use("/api/v1/admin", AdminRouter);
-app.use("/api/v1/admin", CategoryRouter);
+app.use("/api/v1/category", CategoryRouter);
 
 app.use("/", (req, res, next) => {
   res.json({

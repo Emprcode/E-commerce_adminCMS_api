@@ -50,3 +50,14 @@ export const loginValidation = (req, res, next) => {
   });
   return validationProcessor(req, res, next, schema);
 };
+
+
+//add category validation
+
+export const addCategoryValidation = (req, res, next) => {
+  const schema = Joi.object({
+    name: SHORT_STR.required(),
+    
+  });
+  return validationProcessor(req, res, next, schema);
+};

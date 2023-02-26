@@ -6,7 +6,7 @@ const CategorySchema = new mongoose.Schema(
       type: String,
       default: "inactive",
     },
-    catName: {
+    name: {
       type: String,
       required: true,
     },
