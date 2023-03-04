@@ -61,3 +61,14 @@ export const addCategoryValidation = (req, res, next) => {
   });
   return validationProcessor(req, res, next, schema);
 };
+//add category validation
+
+export const updateCategoryValidation = (req, res, next) => {
+  const schema = Joi.object({
+    _id: SHORT_STR.required(),
+    name: SHORT_STR.required(),
+    status: SHORT_STR.required(),
+    
+  });
+  return validationProcessor(req, res, next, schema);
+};

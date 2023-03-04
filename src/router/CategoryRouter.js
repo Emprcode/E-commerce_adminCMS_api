@@ -1,10 +1,12 @@
 import express from "express";
 import slugify from "slugify";
-import { addCategoryValidation } from "../middleware/joiMiddleware.js";
+import { addCategoryValidation, updateCategoryValidation } from "../middleware/joiMiddleware.js";
 
 import {
   createCategory,
+  deleteCategory,
   getCategories,
+  updateCategory,
 } from "../model/category/CategoryModel.js";
 
 const router = express.Router();
@@ -53,26 +55,42 @@ router.get("/", async (req, res, next) => {
 });
 
 //update
-router.put("/", async (req, res, next) => {
+router.put("/", updateCategoryValidation,  async (req, res, next) => {
   try {
+
+    console.log(req.body)
+
+    const result = await updateCategory(req.body)
+    console.log(result)
+
+    result?._id ? 
     res.json({
       status: "success",
-      message: "category added successfully",
-      result,
-    });
+      message: "category updated successfully",
+      
+    }) : res.json({
+      status:"error",
+      message:"Unable to update, please try again later"
+    })
   } catch (error) {
     next(error);
   }
 });
 
 //delete
-router.delete("/", async (req, res, next) => {
+router.delete("/:_id", async (req, res, next) => {
   try {
-    res.json({
+
+    const {_id} = req.params
+    const result = await deleteCategory(_id);
+
+    result?._id ? res.json({
       status: "success",
-      message: "category added successfully",
-      result,
-    });
+      message: "category deleted successfully",
+    }) : res.json({
+      status:"error",
+      message:"Unable to delete the category, Please try again later"
+    })
   } catch (error) {
     next(error);
   }

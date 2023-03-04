@@ -21,3 +21,10 @@ Content-Type: application/json
     "email":"narayanaryal.code@gmail.com",
     "password":"1234"
 }
+
+
+
+### category
+
+###fetch category
+GET  http://localhost:8000/api/v1/category
