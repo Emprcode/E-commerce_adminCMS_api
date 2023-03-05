@@ -25,7 +25,7 @@ connectDb();
 // router
 app.use("/api/v1/admin", AdminRouter);
 app.use("/api/v1/category", CategoryRouter);
-app.use("/api/v1/payment", PaymentRouter);
+app.use("/api/v1/payment-options", PaymentRouter);
 
 app.use("/", (req, res, next) => {
   res.json({
