@@ -40,6 +40,10 @@ const AdminSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    refreshJWT: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true }
 );

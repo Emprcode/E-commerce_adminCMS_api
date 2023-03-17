@@ -18,6 +18,7 @@ import {
   emailVerificationValidation,
   loginValidation,
 } from "../middleware/joiMiddleware.js";
+import { signAccessJWT, signRefreshJWT } from "../utils/jwt.js";
 
 const router = express.Router();
 
@@ -116,13 +117,15 @@ router.post("/login", loginValidation, async (req, res, next) => {
       const isPasswordMatch = comparePassword(password, admin.password);
 
       if (isPasswordMatch) {
-        admin.password = undefined;
-        admin.__v = undefined;
+       const tokens ={
+        accessJWT : await signAccessJWT({email}),
+        refreshJWT : await signRefreshJWT({email})
+       }
 
         return res.json({
           status: "success",
           message: "Login Successful",
-          admin,
+          tokens,
         });
       }
     }
