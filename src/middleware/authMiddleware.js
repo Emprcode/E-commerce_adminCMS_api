@@ -1,6 +1,10 @@
 import { findAdmin } from "../model/adminUser/AdminUserModel.js";
 import { getSession } from "../model/session/SessionModel.js";
-import { signAccessJWT, verifyAccessJWT, verifyRefreshJWT } from "../utils/jwt.js";
+import {
+  signAccessJWT,
+  verifyAccessJWT,
+  verifyRefreshJWT,
+} from "../utils/jwt.js";
 
 export const adminAuth = async (req, res, next) => {
   try {
@@ -34,6 +38,7 @@ export const adminAuth = async (req, res, next) => {
     next(error);
   }
 };
+
 export const newAccessJwtAuth = async (req, res, next) => {
   try {
     //get access token
@@ -45,20 +50,19 @@ export const newAccessJwtAuth = async (req, res, next) => {
     const { email } = verifyRefreshJWT(authorization);
     if (email) {
       //check if email exist
-      const { _id } = await findAdmin({ email,  refreshJWT: authorization });
+      const { _id } = await findAdmin({ email, refreshJWT: authorization });
 
       if (_id) {
         const accessJWT = await signAccessJWT({ email });
 
         if (accessJWT) {
-         return res.json({
-          status:"success",
-          accessJWT
-         })
-          }
+          return res.json({
+            status: "success",
+            accessJWT,
+          });
         }
       }
-    
+    }
 
     res.status(401).json({
       status: "error",
