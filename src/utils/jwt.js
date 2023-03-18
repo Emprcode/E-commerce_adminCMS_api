@@ -22,6 +22,13 @@ export const verifyAccessJWT = (token) => {
     return error.message;
   }
 };
+export const verifyRefreshJWT = (token) => {
+  try {
+    return Jwt.verify(token, process.env.ACCESS_JWT);
+  } catch (error) {
+    return error.message;
+  }
+};
 
 export const signRefreshJWT = async (payload) => {
   const token = Jwt.sign(payload, process.env.REFRESH_JWT, {

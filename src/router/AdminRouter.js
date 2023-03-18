@@ -18,7 +18,8 @@ import {
   emailVerificationValidation,
   loginValidation,
 } from "../middleware/joiMiddleware.js";
-import { signAccessJWT, signRefreshJWT } from "../utils/jwt.js";
+import { signAccessJWT, signRefreshJWT, verifyRefreshJWT } from "../utils/jwt.js";
+import { adminAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -138,7 +139,7 @@ router.post("/login", loginValidation, async (req, res, next) => {
     next(error);
   }
 });
-export default router;
+
 
 //otp request
 
@@ -217,3 +218,48 @@ router.patch("/reset-password", async (req, res, next) => {
     next(error);
   }
 });
+
+
+//get user
+
+router.get("/", adminAuth, (req, res, next)=> {
+  try {
+    res.json({
+      status:"success",
+      admin: req.userInfo
+    })
+  } catch (error) {
+    next(error)
+    
+  }
+})
+
+router.get("/new-accessjwt", adminAuth, (req, res, next)=> {
+  try {
+    res.json({
+      status:"success",
+      admin: req.userInfo
+    })
+  } catch (error) {
+    next(error)
+    
+  }
+})
+router.patch("/logout", async(req, res, next)=> {
+  try {
+   const {authorization} = req.headers
+    const {email} = verifyRefreshJWT(authorization)
+    email && (await findAdminAndUpdate({email}, {refreshJWT:""}))
+
+    res.json({
+      status:"success",
+      message:"logout success"
+    })
+
+  } catch (error) {
+    next(error)
+    
+  }
+})
+
+export default router;
