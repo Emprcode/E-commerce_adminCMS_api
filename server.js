@@ -7,7 +7,7 @@ import cors from "cors";
 import AdminRouter from "./src/router/AdminRouter.js";
 import CategoryRouter from "./src/router/CategoryRouter.js";
 import PaymentRouter from "./src/router/PaymentRouter.js";
-import { connectDb } from "./src/config/DbConfig.js";
+import { connectDb } from "./src/config/dbConfig.js";
 import { adminAuth } from "./src/middleware/authMiddleware.js";
 
 const app = express();
