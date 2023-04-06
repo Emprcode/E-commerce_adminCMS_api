@@ -28,3 +28,16 @@ Content-Type: application/json
 
 ###fetch category
 GET  http://localhost:8000/api/v1/category
+
+
+
+### product
+
+POST http://localhost:8000/api/v1/product
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcmF5YW5hcnlhbC5jb2RlQGdtYWlsLmNvbSIsImlhdCI6MTY4MDc0ODc2MSwiZXhwIjoxNjgwNzQ5NjYxfQ.KnLqDsZYjUOEiPKmfUMjno1kSTBxta15aVUvrAYr89o
+
+{
+    "name":"nike shoes",
+    "description":"New shoes"
+}

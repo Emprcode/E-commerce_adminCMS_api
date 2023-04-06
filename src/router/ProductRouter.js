@@ -1,5 +1,6 @@
 import express from "express";
-import { addNewProduct } from "../model/product/ProductModel";
+import { addNewProduct } from "../model/product/ProductModel.js";
+import slugify from "slugify";
 
 const router = express.Router();
 
@@ -8,6 +9,7 @@ const router = express.Router();
 router.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
+    req.body.slug = slugify(req.body.name, { lower: true, trim: true });
     const result = await addNewProduct(req.body);
 
     result?._id
