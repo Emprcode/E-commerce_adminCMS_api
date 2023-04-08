@@ -35,7 +35,7 @@ GET  http://localhost:8000/api/v1/category
 
 POST http://localhost:8000/api/v1/product
 Content-Type: application/json
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im5hcmF5YW5hcnlhbC5jb2RlQGdtYWlsLmNvbSIsImlhdCI6MTY4MDc0ODc2MSwiZXhwIjoxNjgwNzQ5NjYxfQ.KnLqDsZYjUOEiPKmfUMjno1kSTBxta15aVUvrAYr89o
+Authorization: 63f168f311dea880032d2edd
 
 {
     "name":"nike shoes",

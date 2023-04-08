@@ -26,4 +26,20 @@ router.post("/", async (req, res, next) => {
   }
 });
 
+//get all products
+router.get("/", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const result = await addNewProduct();
+
+    res.json({
+      status: "success",
+      message: "All product fetched successfully!",
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
