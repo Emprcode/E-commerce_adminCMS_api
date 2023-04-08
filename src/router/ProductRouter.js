@@ -41,5 +41,38 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
+//get all products
+router.get("/", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const result = await addNewProduct();
+
+    res.json({
+      status: "success",
+      message: "All product fetched successfully!",
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+//update  products
+router.put("/", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const result = await addNewProduct(req.body);
+    result?._id
+      ? res.json({
+          status: "success",
+          message: "All product fetched successfully!",
+        })
+      : res.json({
+          status: "error",
+          message: "unable to update now, Please try again later",
+        });
+  } catch (error) {
+    next(error);
+  }
+});
 
 export default router;
