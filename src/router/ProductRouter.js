@@ -1,5 +1,10 @@
 import express from "express";
-import { addNewProduct } from "../model/product/ProductModel.js";
+import {
+  addNewProduct,
+  getProducts,
+  updateProduct,
+  deleteProduct,
+} from "../model/product/ProductModel.js";
 import slugify from "slugify";
 
 const router = express.Router();
@@ -41,26 +46,12 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
-//get all products
-router.get("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const result = await addNewProduct();
 
-    res.json({
-      status: "success",
-      message: "All product fetched successfully!",
-      result,
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 //update  products
 router.put("/", async (req, res, next) => {
   try {
     console.log(req.body);
-    const result = await addNewProduct(req.body);
+    const result = await updateProduct(req.body);
     result?._id
       ? res.json({
           status: "success",
@@ -75,4 +66,19 @@ router.put("/", async (req, res, next) => {
   }
 });
 
+//get all products
+router.delete("/", async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const result = await deleteProduct();
+
+    res.json({
+      status: "success",
+      message: "All product fetched successfully!",
+      result,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 export default router;
