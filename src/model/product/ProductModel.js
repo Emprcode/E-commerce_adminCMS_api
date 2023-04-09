@@ -16,6 +16,6 @@ export const updateProduct = ({_id, ...updateObj}) => {
 }
 
 //delete
-export const deleteProduct = (_id) => {
-    return ProductSchema.findByIdAndDelete(_id)
+export const deleteProduct = (filter) => {
+    return ProductSchema.findByIdAndDelete(filter)
 }

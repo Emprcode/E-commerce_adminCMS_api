@@ -70,7 +70,7 @@ router.put("/", async (req, res, next) => {
 router.delete("/", async (req, res, next) => {
   try {
     console.log(req.body);
-    const result = await deleteProduct();
+    const result = await deleteProduct(req.body);
 
     res.json({
       status: "success",
