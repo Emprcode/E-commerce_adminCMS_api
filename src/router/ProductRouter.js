@@ -15,6 +15,7 @@ router.post("/", async (req, res, next) => {
   try {
     console.log(req.body);
     req.body.slug = slugify(req.body.name, { lower: true, trim: true });
+    console.log(req.body)
     const result = await addNewProduct(req.body);
 
     result?._id
@@ -35,7 +36,7 @@ router.post("/", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     console.log(req.body);
-    const result = await addNewProduct();
+    const result = await getProducts();
 
     res.json({
       status: "success",
