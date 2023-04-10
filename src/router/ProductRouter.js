@@ -75,8 +75,8 @@ router.delete("/", async (req, res, next) => {
 
     res.json({
       status: "success",
-      message: "All product fetched successfully!",
-      result,
+      message: " product deleted successfully!",
+    
     });
   } catch (error) {
     next(error);
