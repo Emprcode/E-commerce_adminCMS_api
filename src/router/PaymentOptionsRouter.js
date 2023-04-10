@@ -77,10 +77,10 @@ router.delete("/:_id", async (req, res, next) => {
 
     result?._id ? res.json({
       status: "success",
-      message: "payment deleted successfully",
+      message: "Payment Option deleted successfully",
     }) : res.json({
       status:"error",
-      message:"Unable to delete the payment, Please try again later"
+      message:"Unable to delete the payment option, Please try again later"
     })
   } catch (error) {
     next(error);

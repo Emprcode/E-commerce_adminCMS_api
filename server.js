@@ -6,7 +6,7 @@ import cors from "cors";
 
 import AdminRouter from "./src/router/AdminRouter.js";
 import CategoryRouter from "./src/router/CategoryRouter.js";
-import PaymentRouter from "./src/router/PaymentRouter.js";
+import PaymentOptionsRouter from "./src/router/PaymentOptionsRouter.js";
 import { connectDb } from "./src/config/DbConfig.js";
 import { adminAuth } from "./src/middleware/authMiddleware.js";
 import ProductRouter from "./src/router/ProductRouter.js";
@@ -27,7 +27,7 @@ connectDb();
 // router
 app.use("/api/v1/admin", AdminRouter);
 app.use("/api/v1/category", adminAuth, CategoryRouter);
-app.use("/api/v1/payment-options", adminAuth, PaymentRouter);
+app.use("/api/v1/payment-options", adminAuth, PaymentOptionsRouter);
 app.use("/api/v1/product", adminAuth, ProductRouter)
 
 app.use("/", (req, res, next) => {
