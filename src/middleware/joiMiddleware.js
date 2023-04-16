@@ -3,6 +3,7 @@ import Joi from "joi";
 const EMAIL = Joi.string().email({ minDomainSegments: 2 }).required();
 const SHORT_STR = Joi.string().max(100);
 const LONG_STR = Joi.string().max(500);
+const NUMBER = Joi.number();
 
 export const validationProcessor = (req, res, next, schema) => {
   try {
@@ -94,3 +95,23 @@ export const updatePaymentOptionsValidation = (req, res, next) => {
   });
   return validationProcessor(req, res, next, schema);
 };
+
+// add items/product  validation
+
+export const newItemsValidation = (req, res, next) => {
+  const schema = Joi.object({
+    status: SHORT_STR,
+    name: SHORT_STR.required(),
+    sku: SHORT_STR.required(),
+    price: NUMBER.required(),
+    qty: NUMBER.required(),
+    salesPrice: SHORT_STR,
+    salesStartDate: SHORT_STR.allow("", null),
+    salesEndDate: SHORT_STR.allow("", null),
+    description: LONG_STR.required(),
+    thumbnail: LONG_STR.required(),
+
+
+  })
+  return validationProcessor(req, res, next, schema)
+}

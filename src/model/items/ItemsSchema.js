@@ -10,6 +10,12 @@ const ItemsSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    slug: {
+      type: String,
+      required: true,
+      unique: true,
+      index: 1,
+    },
     sku: {
       type: String,
       required: true,
