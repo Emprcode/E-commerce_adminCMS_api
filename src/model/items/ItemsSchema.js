@@ -46,7 +46,8 @@ const ItemsSchema = new mongoose.Schema(
     },
     thumbnail: {
       type: String,
-      required: true,
+      default: "",
+      // required: true,
     },
     images: [
       {

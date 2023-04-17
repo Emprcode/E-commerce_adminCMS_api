@@ -109,7 +109,7 @@ export const newItemsValidation = (req, res, next) => {
     salesStartDate: SHORT_STR.allow("", null),
     salesEndDate: SHORT_STR.allow("", null),
     description: LONG_STR.required(),
-    thumbnail: LONG_STR.required(),
+    // thumbnail: LONG_STR.required(),
 
 
   })
