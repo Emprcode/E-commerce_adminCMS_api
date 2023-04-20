@@ -38,6 +38,7 @@ router.post(
       //images
       const images = newImages.map((item, i) => item.path);
       req.body.images = images;
+      req.body.thumbnail = images[0];
 
       req.body.slug = slugify(req.body.name, { trim: true, lower: true });
       const result = await createItems(req.body);
