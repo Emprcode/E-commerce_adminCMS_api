@@ -4,7 +4,7 @@ import { createSession } from "../model/session/SessionModel.js";
 
 //payload must be an object
 export const signAccessJWT = async (payload) => {
-  const token = Jwt.sign(payload, process.env.ACCESS_JWT, { expiresIn: "15m" });
+  const token = Jwt.sign(payload, process.env.ACCESS_JWT, { expiresIn: "60m" });
 
   //store in session table
 

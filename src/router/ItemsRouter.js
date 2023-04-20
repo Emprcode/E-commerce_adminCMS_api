@@ -24,29 +24,42 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/", newItemsValidation, async (req, res, next) => {
-  try {
-    console.log(req.body);
-    req.body.slug = slugify(req.body.name, { trim: true, lower: true });
-    const result = await createItems(req.body);
+router.post(
+  "/",
+  upload.array("images"),
+  newItemsValidation,
+  async (req, res, next) => {
+    try {
+      console.log(req.body);
 
-    result?._id
-      ? res.json({
-          status: "success",
-          message: "New Items added successfully!",
-        })
-      : res.json({
-          status: "error",
-          message: "Unable to add items, Please try again later.",
-        });
-  } catch (error) {
-    if (error.message.includes("E11000 duplicate key error collection")) {
-      error.message =
-        "There is same items with same slug and sku, Pleae use different one";
+      //form data => req.body
+
+      const newImages = req.files;
+      //images
+      const images = newImages.map((item, i) => item.path);
+      req.body.images = images;
+
+      req.body.slug = slugify(req.body.name, { trim: true, lower: true });
+      const result = await createItems(req.body);
+
+      result?._id
+        ? res.json({
+            status: "success",
+            message: "New Items added successfully!",
+          })
+        : res.json({
+            status: "error",
+            message: "Unable to add items, Please try again later.",
+          });
+    } catch (error) {
+      if (error.message.includes("E11000 duplicate key error collection")) {
+        error.message =
+          "There is same items with same slug and sku, Pleae use different one";
+      }
+      next(error);
     }
-    next(error);
   }
-});
+);
 
 //get
 
