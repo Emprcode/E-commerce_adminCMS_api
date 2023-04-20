@@ -3,8 +3,26 @@ import { newItemsValidation } from "../middleware/joiMiddleware.js";
 import { createItems } from "../model/items/ItemsModel.js";
 import slugify from "slugify";
 import { getAllItems } from "../model/items/ItemsModel.js";
+import multer from "multer";
 
 const router = express.Router();
+
+const imgFolderPath = "public/img/items";
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let error = null;
+    //validation error
+    cb(error, imgFolderPath);
+  },
+  filename: (req, file, cb) => {
+    let error = null;
+
+    const fullFileName = Date.now() + "_" + file.originalname;
+    cb(error, fullFileName);
+  },
+});
+
+const upload = multer({ storage });
 
 router.post("/", newItemsValidation, async (req, res, next) => {
   try {
