@@ -11,16 +11,22 @@ import { connectDb } from "./src/config/DbConfig.js";
 import { adminAuth } from "./src/middleware/authMiddleware.js";
 import ProductRouter from "./src/router/ProductRouter.js";
 import ItemsRouter from "./src/router/ItemsRouter.js";
+import path from 'path'
 
 const app = express();
 
 const PORT = process.env.PORT || 8000;
+
+
+//server static files
+const __dirname = path.resolve()
 
 //middleware
 
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "/public")))
 
 //db connect
 connectDb();
