@@ -1,46 +1,75 @@
 import express from "express";
-import {
-  addNewProduct,
-  getProducts,
-  updateProduct,
-  deleteProduct,
-} from "../model/product/ProductModel.js";
+import { newItemsValidation } from "../middleware/joiMiddleware.js";
+import { createItems } from "../model/items/ItemsModel.js";
 import slugify from "slugify";
+import { getAllItems } from "../model/items/ItemsModel.js";
+import multer from "multer";
 
 const router = express.Router();
 
-// add new product
+const imgFolderPath = "public/img/items";
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    let error = null;
+    //validation error
+    cb(error, imgFolderPath);
+  },
+  filename: (req, file, cb) => {
+    let error = null;
 
-router.post("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    req.body.slug = slugify(req.body.name, { lower: true, trim: true });
-    console.log(req.body)
-    const result = await addNewProduct(req.body);
-
-    result?._id
-      ? res.json({
-          status: "success",
-          message: "New Product added Successfully!",
-        })
-      : res.json({
-          status: "error",
-          message: "Unable to add new product, Please try again later",
-        });
-  } catch (error) {
-    next(error);
-  }
+    const fullFileName = Date.now() + "_" + file.originalname;
+    cb(error, fullFileName);
+  },
 });
 
-//get all products
+const upload = multer({ storage });
+
+router.post(
+  "/",
+  upload.array("images"),
+  newItemsValidation,
+  async (req, res, next) => {
+    try {
+      console.log(req.body);
+
+      //form data => req.body
+
+      const newImages = req.files;
+      //images
+      const images = newImages.map((item, i) => item.path);
+      req.body.images = images;
+      req.body.thumbnail = images[0];
+
+      req.body.slug = slugify(req.body.name, { trim: true, lower: true });
+      const result = await createItems(req.body);
+
+      result?._id
+        ? res.json({
+            status: "success",
+            message: "New Items added successfully!",
+          })
+        : res.json({
+            status: "error",
+            message: "Unable to add items, Please try again later.",
+          });
+    } catch (error) {
+      if (error.message.includes("E11000 duplicate key error collection")) {
+        error.message =
+          "There is same items with same slug and sku, Pleae use different one";
+      }
+      next(error);
+    }
+  }
+);
+
+//get
+
 router.get("/", async (req, res, next) => {
   try {
-    console.log(req.body);
-    const result = await getProducts();
-
+    const result = await getAllItems();
     res.json({
       status: "success",
-      message: "All product fetched successfully!",
+      message: "here is the product list",
       result,
     });
   } catch (error) {
@@ -48,38 +77,4 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-//update  products
-router.put("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const result = await updateProduct(req.body);
-    result?._id
-      ? res.json({
-          status: "success",
-          message: "All product fetched successfully!",
-        })
-      : res.json({
-          status: "error",
-          message: "unable to update now, Please try again later",
-        });
-  } catch (error) {
-    next(error);
-  }
-});
-
-//get all products
-router.delete("/", async (req, res, next) => {
-  try {
-    console.log(req.body);
-    const result = await deleteProduct(req.body);
-
-    res.json({
-      status: "success",
-      message: " product deleted successfully!",
-    
-    });
-  } catch (error) {
-    next(error);
-  }
-});
 export default router;

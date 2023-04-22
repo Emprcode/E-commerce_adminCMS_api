@@ -10,7 +10,6 @@ import PaymentOptionsRouter from "./src/router/PaymentOptionsRouter.js";
 import { connectDb } from "./src/config/DbConfig.js";
 import { adminAuth } from "./src/middleware/authMiddleware.js";
 import ProductRouter from "./src/router/ProductRouter.js";
-import ItemsRouter from "./src/router/ItemsRouter.js";
 import path from 'path'
 
 const app = express();
@@ -36,7 +35,6 @@ app.use("/api/v1/admin", AdminRouter);
 app.use("/api/v1/category", adminAuth, CategoryRouter);
 app.use("/api/v1/payment-options", adminAuth, PaymentOptionsRouter);
 app.use("/api/v1/product", adminAuth, ProductRouter)
-app.use("/api/v1/items", adminAuth, ItemsRouter)
 
 app.use("/", (req, res, next) => {
   res.json({
