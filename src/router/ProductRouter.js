@@ -25,7 +25,7 @@ const upload = multer({ storage });
 
 router.post(
   "/",
-  upload.array("images"),
+  upload.array("images", 5),
   newProductValidation,
   async (req, res, next) => {
     try {
