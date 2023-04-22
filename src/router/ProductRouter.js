@@ -1,9 +1,8 @@
 import express from "express";
-import { newItemsValidation } from "../middleware/joiMiddleware.js";
-import { createItems } from "../model/items/ItemsModel.js";
+import { newProductValidation } from "../middleware/joiMiddleware.js";
 import slugify from "slugify";
-import { getAllItems } from "../model/items/ItemsModel.js";
 import multer from "multer";
+import { createProduct, getAllProducts } from "../model/product/ProductModel.js";
 
 const router = express.Router();
 
@@ -27,7 +26,7 @@ const upload = multer({ storage });
 router.post(
   "/",
   upload.array("images"),
-  newItemsValidation,
+  newProductValidation,
   async (req, res, next) => {
     try {
       console.log(req.body);
@@ -41,7 +40,7 @@ router.post(
       req.body.thumbnail = images[0];
 
       req.body.slug = slugify(req.body.name, { trim: true, lower: true });
-      const result = await createItems(req.body);
+      const result = await createProduct(req.body);
 
       result?._id
         ? res.json({
@@ -66,7 +65,7 @@ router.post(
 
 router.get("/", async (req, res, next) => {
   try {
-    const result = await getAllItems();
+    const result = await getAllProducts();
     res.json({
       status: "success",
       message: "here is the product list",

@@ -96,9 +96,9 @@ export const updatePaymentOptionsValidation = (req, res, next) => {
   return validationProcessor(req, res, next, schema);
 };
 
-// add items/product  validation
+// add product  validation
 
-export const newItemsValidation = (req, res, next) => {
+export const newProductValidation = (req, res, next) => {
   const schema = Joi.object({
     status: SHORT_STR,
     name: SHORT_STR.required(),

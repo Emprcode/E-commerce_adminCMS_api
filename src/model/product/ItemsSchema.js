@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const itemsSchema = new mongoose.Schema(
+const ProductSchema = new mongoose.Schema(
   {
     status: {
       type: String,
@@ -64,4 +64,4 @@ const itemsSchema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model("Items", itemsSchema);
+export default mongoose.model("Items", ProductSchema);
