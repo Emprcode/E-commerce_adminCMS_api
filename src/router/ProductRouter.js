@@ -3,6 +3,7 @@ import { newProductValidation } from "../middleware/joiMiddleware.js";
 import slugify from "slugify";
 import multer from "multer";
 import { createProduct, getAllProducts } from "../model/product/ProductModel.js";
+import { adminAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 router.post(
-  "/",
+  "/", adminAuth,
   upload.array("images", 5),
   newProductValidation,
   async (req, res, next) => {
@@ -63,7 +64,7 @@ router.post(
 
 //get
 
-router.get("/", async (req, res, next) => {
+router.get("/",   async (req, res, next) => {
   try {
     const result = await getAllProducts();
     res.json({
@@ -71,6 +72,7 @@ router.get("/", async (req, res, next) => {
       message: "here is the product list",
       result,
     });
+    console.log(result)
   } catch (error) {
     next(error);
   }

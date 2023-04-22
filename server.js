@@ -34,7 +34,7 @@ connectDb();
 app.use("/api/v1/admin", AdminRouter);
 app.use("/api/v1/category", adminAuth, CategoryRouter);
 app.use("/api/v1/payment-options", adminAuth, PaymentOptionsRouter);
-app.use("/api/v1/product", adminAuth, ProductRouter)
+app.use("/api/v1/product", ProductRouter)
 
 app.use("/", (req, res, next) => {
   res.json({
