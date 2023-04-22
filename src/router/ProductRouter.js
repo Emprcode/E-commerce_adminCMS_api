@@ -6,7 +6,7 @@ import { createProduct, getAllProducts } from "../model/product/ProductModel.js"
 
 const router = express.Router();
 
-const imgFolderPath = "public/img/items";
+const imgFolderPath = "public/img/products";
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     let error = null;
