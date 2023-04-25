@@ -30,7 +30,7 @@ router.post(
   newProductValidation,
   async (req, res, next) => {
     try {
-      console.log(req.body);
+      // console.log(req.body);
 
       //form data => req.body
 
@@ -72,7 +72,7 @@ router.get("/",   async (req, res, next) => {
       message: "here is the product list",
       result,
     });
-    console.log(result)
+    // console.log(result)
   } catch (error) {
     next(error);
   }
