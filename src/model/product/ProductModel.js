@@ -13,8 +13,8 @@ export const getSingleProduct = ({ filter }) => {
 export const updateProduct = (_id, updateObj) => {
   return ProductSchema.findByIdAndUpdate(_id, updateObj, { new: true });
 };
-export const deleteSingleItem = (filter) => {
-  return ProductSchema.findOneAndDelete(filter);
+export const deleteSingleItem = ({_id}) => {
+  return ProductSchema.findByIdAndDelete(_id);
 };
 
 //idsArg must be an array of an _id

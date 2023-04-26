@@ -2,7 +2,7 @@ import express from "express";
 import { newProductValidation } from "../middleware/joiMiddleware.js";
 import slugify from "slugify";
 import multer from "multer";
-import { createProduct, getAllProducts } from "../model/product/ProductModel.js";
+import { createProduct, deleteSingleItem, getAllProducts } from "../model/product/ProductModel.js";
 import { adminAuth } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
@@ -72,6 +72,25 @@ router.get("/",   async (req, res, next) => {
       message: "here is the product list",
       result,
     });
+    // console.log(result)
+  } catch (error) {
+    next(error);
+  }
+});
+
+//delete
+
+router.delete("/",   async (req, res, next) => {
+  try {
+    const result = await deleteSingleItem(req.body);
+
+    result?._id ? res.json({
+      status: "success",
+      message: "The product deleted successfully",
+    }) : res.json({
+      status:"error",
+      message:"Unable to delete product, Please try again later!"
+    })
     // console.log(result)
   } catch (error) {
     next(error);
