@@ -46,9 +46,9 @@ app.use("/", (req, res, next) => {
 //global error handler
 app.use((error, req, res, next) => {
   console.log(error);
-  const errorCode = error.errorCode || 404;
+  const statusCode = error.errorCode || 404;
 
-  res.status(errorCode).json({
+  res.status(statusCode).json({
     status: "error",
     message: error.message,
   });

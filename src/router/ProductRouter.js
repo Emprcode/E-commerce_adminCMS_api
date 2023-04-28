@@ -26,8 +26,8 @@ const upload = multer({ storage });
 
 router.post(
   "/", adminAuth,
-  newProductValidation,
   upload.array("images", 5),
+  newProductValidation,
   async (req, res, next) => {
     try {
       console.log(req.body);

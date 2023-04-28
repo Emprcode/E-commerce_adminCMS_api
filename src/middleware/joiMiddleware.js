@@ -103,7 +103,7 @@ export const newProductValidation = (req, res, next) => {
     status: SHORT_STR,
     name: SHORT_STR.required(),
     sku: SHORT_STR.required(),
-    parentCat: SHORT_STR.required(),
+    // parentCat: SHORT_STR.required(),
     price: NUMBER.required(),
     qty: NUMBER.required(),
     salesPrice: SHORT_STR,
