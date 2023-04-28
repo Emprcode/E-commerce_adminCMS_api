@@ -30,7 +30,7 @@ router.post(
   upload.array("images", 5),
   async (req, res, next) => {
     try {
-      // console.log(req.body);
+      console.log(req.body);
 
       //form data => req.body
 
@@ -42,6 +42,7 @@ router.post(
 
       req.body.slug = slugify(req.body.name, { trim: true, lower: true });
       const result = await createProduct(req.body);
+      console.log(result)
 
       result?._id
         ? res.json({

@@ -47,7 +47,7 @@ const ProductSchema = new mongoose.Schema(
     parentCat: {
       type: mongoose.Schema.Types.ObjectId,
       ref:"Category",
-
+      default:"",
       required: true,
     },
     thumbnail: {
