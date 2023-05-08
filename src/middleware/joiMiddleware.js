@@ -116,3 +116,30 @@ export const newProductValidation = (req, res, next) => {
   })
   return validationProcessor(req, res, next, schema)
 }
+// edit product  validation
+
+export const editProductValidation = (req, res, next) => {
+  req.body.salesPrice = req.body.salesPrice || 0
+  req.body.salesStartDate = req.body.salesStartDate || null
+  req.body.salesEndDate = req.body.salesEndDate || null
+
+  const schema = Joi.object({
+    _id: SHORT_STR.required(),
+    status: SHORT_STR,
+    name: SHORT_STR.required(),
+    sku: SHORT_STR.required(),
+    parentCat: SHORT_STR.required(),
+    price: NUMBER.required(),
+    qty: NUMBER.required(),
+    salesPrice: SHORT_STR,
+    salesStartDate: SHORT_STR.allow("", null),
+    salesEndDate: SHORT_STR.allow("", null),
+    description: LONG_STR.required(),
+    thumbnail: LONG_STR.allow("", null),
+    images: LONG_STR.allow("", null),
+    imgToDel: LONG_STR.allow("", null),
+
+
+  })
+  return validationProcessor(req, res, next, schema)
+}
