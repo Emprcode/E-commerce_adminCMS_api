@@ -9,6 +9,7 @@ import {
 } from "../model/product/ProductModel.js";
 import { adminAuth } from "../middleware/authMiddleware.js";
 import { uploadFile } from "../utils/s3.js";
+import cloudinary from "../utils/cloudinary.js";
 
 const router = express.Router();
 
@@ -37,13 +38,27 @@ router.post(
   newProductValidation,
   async (req, res, next) => {
     try {
-      const s3Images = await uploadFile(req.files);
-      console.log("s3Images", s3Images);
-      //images
-      const images = s3Images.map((item, i) => item.Location);
+      // const s3Images = await uploadFile(req.files);
+      // console.log("s3Images", s3Images);
+      // const images = s3Images.map((item, i) => item.Location);
 
-      req.body.images = images;
-      req.body.thumbnail = images[0];
+      // req.body.images = images;
+      // req.body.thumbnail = images[0];
+
+      const b64 = Buffer?.from(req.files[0].buffer).toString("base64");
+      let dataURI = "data:" + req.files[0].mimetype + ";base64," + b64;
+      if (req.files) {
+        const uploadedResponse = await cloudinary.uploader.upload(dataURI, {
+          upload_preset: "acexsports",
+        });
+
+        //images
+
+        const images = uploadedResponse.url;
+
+        req.body.thumbnail = images;
+        req.body.images = images;
+      }
 
       req.body.slug = slugify(req.body.name, { trim: true, lower: true });
 
